@@ -39,7 +39,7 @@ creds = Credentials(
 )
 drive = build('drive','v3',credentials=creds,cache_discovery=False)
 
-folder_id = '18jhKUXS5kL6j7UCn1zmTcq6VM1ggIZO'  # replace with your ID
+folder_id = '18jhKUXS5kL6j7UCn1zmTcq6VM1ggIZOu'  # replace with your ID
 meta = drive.files().get(
     fileId=folder_id,
     fields='id,name,owners,permissions,trashed',
