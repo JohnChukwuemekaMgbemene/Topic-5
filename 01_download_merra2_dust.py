@@ -55,6 +55,14 @@ from urllib.parse import quote
 import pandas as pd
 import xarray as xr
 
+# Load local .env if present (optional; avoids manual env setup)
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv()
+except Exception:
+    pass
+
 
 # ============================================================
 # SETTINGS
@@ -372,8 +380,22 @@ def fetch_day(granule, session):
 
         try:
 
+            # pydap/xarray prefers the dap4:// scheme for OPeNDAP access
+            dap_url = url
+
+            if dap_url.startswith("https://"):
+                dap_url = dap_url.replace("https://", "dap4://", 1)
+
+            # Ensure Authorization header is present when we have a token
+            try:
+                session.headers.update({
+                    "Authorization": f"Bearer {EARTHDATA_TOKEN}"
+                })
+            except Exception:
+                pass
+
             with xr.open_dataset(
-                url,
+                dap_url,
                 engine="pydap",
                 session=session
             ) as ds:
@@ -464,6 +486,8 @@ def drive_file_exists(service, filename):
             q=query,
             spaces="drive",
             fields="files(id,name,size,modifiedTime)",
+            includeItemsFromAllDrives=True,
+            supportsAllDrives=True,
             pageSize=10,
         )
         .execute()
@@ -515,7 +539,8 @@ def upload_to_drive(service, local_path, filename):
         .create(
             body=metadata,
             media_body=media,
-            fields="id,name,size"
+            fields="id,name,size",
+            supportsAllDrives=True,
         )
     )
 
@@ -659,7 +684,8 @@ def test_run():
         drive.files()
         .get(
             fileId=DRIVE_FOLDER_ID,
-            fields="id,name,mimeType"
+            fields="id,name,mimeType",
+            supportsAllDrives=True,
         )
         .execute()
     )
