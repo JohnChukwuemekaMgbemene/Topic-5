@@ -1,2 +1,3 @@
 earthdata_token.txt
 credentials.json
+.env

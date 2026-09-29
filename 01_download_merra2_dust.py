@@ -177,14 +177,54 @@ def make_session(token):
 
         import requests
 
-        session = requests.Session()
+        # Prefer earthaccess-based authenticated cookies when available.
+        try:
+            import earthaccess
 
-        session.headers.update({
-            "Authorization": f"Bearer {token}",
-            "User-Agent": USER_AGENT,
-        })
+            auth = earthaccess.login(strategy="environment")
 
-        return session
+            session = requests.Session()
+
+            # Try common attribute names where earthaccess may store a requests.Session
+            cookie_source = None
+
+            for attr in ("session", "_session", "requests_session", "client"):
+                if hasattr(auth, attr):
+                    cookie_source = getattr(auth, attr)
+                    break
+
+            # If the auth object itself exposes a cookie jar, use it
+            if cookie_source is None and hasattr(auth, "cookie_jar"):
+                cookie_source = auth
+
+            # Transfer cookies if possible
+            try:
+                cookies = getattr(cookie_source, "cookies", None)
+
+                if cookies is not None:
+                    session.cookies.update(cookies)
+
+            except Exception:
+                # best-effort; ignore failures and fall back
+                pass
+
+            session.headers.update({
+                "User-Agent": USER_AGENT
+            })
+
+            return session
+
+        except Exception:
+
+            session = requests.Session()
+
+            session.headers.update({
+                "Authorization": f"Bearer {token}",
+                "User-Agent": USER_AGENT,
+            })
+
+            return session
+
 
 
 # ============================================================
