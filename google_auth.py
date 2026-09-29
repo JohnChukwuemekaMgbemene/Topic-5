@@ -1,0 +1,23 @@
+from google_auth_oauthlib.flow import InstalledAppFlow
+
+SCOPES = [
+    "https://www.googleapis.com/auth/drive"
+]
+
+flow = InstalledAppFlow.from_client_secrets_file(
+    "credentials.json",
+    SCOPES
+)
+
+credentials = flow.run_local_server(
+    port=0
+)
+
+print("\nREFRESH TOKEN:")
+print(credentials.refresh_token)
+
+print("\nCLIENT ID:")
+print(credentials.client_id)
+
+print("\nCLIENT SECRET:")
+print(credentials.client_secret)
