@@ -1,0 +1,10 @@
+season,season_start_year,days_with_data,expected_days,coverage_pct,avg_obs_per_day,season_finished,mean_vis_km,usable
+2010/11,2010,23,151,15.2,3.4,True,6.52,False
+2011/12,2011,29,152,19.1,1.7,True,8.33,False
+2019/20,2019,138,152,90.8,4.9,True,7.28,True
+2020/21,2020,66,151,43.7,2.8,True,7.49,False
+2021/22,2021,84,151,55.6,4.0,True,6.25,False
+2022/23,2022,67,151,44.4,2.6,True,6.81,False
+2023/24,2023,41,152,27.0,4.1,True,8.69,False
+2024/25,2024,141,151,93.4,8.2,True,6.58,True
+2025/26,2025,144,151,95.4,8.2,True,7.17,True

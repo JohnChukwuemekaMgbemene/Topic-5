@@ -1,0 +1,3 @@
+metric,n,S,Z,p,trend,sen_slope
+season_mean_vsby,26,-119.0,-2.601,0.0093,decreasing (significant),-0.1715
+season_mean_of_daily_min_vsby,26,-123.0,-2.689,0.0072,decreasing (significant),-0.189
